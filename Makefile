@@ -1,13 +1,19 @@
 OBJS = main.o compressor.o 
-COMP = g++
-ARGS = -g -Wall
+CC = g++
+DEBUG = -g
+CFALGS = -Wall -c $(DEBUG)
+LFLAGS = -Wall $(DEBUG)
 
-exe: main.o compressor.o
 
-main.o: compressor.cpp  
+compress.exe: $(OBJS)
+	$(CC) $(LFLAGS) $(OBJS) -o compress.exe
+
+main.o: compressor.cpp compressor.h
+	$(CC) $(CFLAGS) main.cpp 
 
 compressor.o: compressor.cpp compressor.h
+	$(CC) $(CFALGS) compressor.cpp 
 
 clean:
-	./rm *.o *exe
+	\rm *.o *compress.exe
 
