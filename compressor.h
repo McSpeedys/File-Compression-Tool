@@ -8,11 +8,11 @@
 #include <unordered_map>
 #include <string>
 
-//Prototype function declarations and our node structure.
-void compress(ifstream&, ofstream&);
-void decompress(ifstream&, ofstream&);
-void charCount(std::unordered_map<char, int>&);
-void generateCode(Node&, std::string, std::unordered_map<char, int>&);
+//Prototype function declarations and the node structure.
+void compress(std::ifstream&, std::ofstream&);
+void decompress(std::ifstream&, std::ofstream&);
+void charCount(std::unordered_map<char, int>&, std::string);
+std::string generateCode(Node&, std::unordered_map<char, int>&);
 struct Node;
 
 #endif
