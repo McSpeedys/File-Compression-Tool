@@ -1,4 +1,4 @@
-OBJS = main.o compressor.o node.o 
+OBJS = main.o compressor.o  
 CC = g++
 DEBUG = -g
 CFLAGS = -Wall -c $(DEBUG)
@@ -11,7 +11,7 @@ compress.exe: $(OBJS)
 main.o: compressor.cpp compressor.h
 	$(CC) $(CFLAGS) main.cpp 
 
-compressor.o: compressor.cpp compressor.h node.h
+compressor.o: compressor.cpp compressor.h 
 	$(CC) $(CFLAGS) compressor.cpp
 
 clean:

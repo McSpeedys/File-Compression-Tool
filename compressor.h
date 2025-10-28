@@ -6,11 +6,13 @@
 #include <iostream>
 #include <fstream>
 #include <unordered_map>
+#include <string>
 
-//Prototype function declarations.
-void compress(ifstream& infile, ofstream& outfile)
-void decompress(ifstream& infile, ofstream& outfile)
-int charCount(std::unordered_map<char, int>& charMap)
-void generateCode()
+//Prototype function declarations and our node structure.
+void compress(ifstream&, ofstream&);
+void decompress(ifstream&, ofstream&);
+void charCount(std::unordered_map<char, int>&);
+void generateCode(Node&, std::string, std::unordered_map<char, int>&);
+struct Node;
 
 #endif
