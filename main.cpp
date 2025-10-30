@@ -39,6 +39,7 @@ int main(int argc, char** argv){
       break;
     }
     default:{
+      //Outputting correct usage if the user gets it wrong.        
       std::cout << "Valid Usage:\n";
       std::cout << "To Compress: ./compress.exe -c <Your_input_file> <Your_output_file>\n";
       std::cout << "To Decompress: ./compress.exe -d <Your_input_file> <Your_output_file>" << std::endl;
