@@ -39,9 +39,26 @@ class Node{
     }
 };
 
-void charCount(std::unordered_map<char, int>& hmap, std::string target){}
+void charCount(std::unordered_map<char, int>& hmap, std::string target){
+  //Navigate through the line one by one and register them to the map.
+  for(int i = 0; i < target.length(); i++){
+    char currChar = target[i];
+    //If a character is not already in the map put it into the map.
+    //If it is already in the map increment its frequency.
+    if(hmap.count(currChar) == 0){
+      hmap.insert({currChar, 1});
+    }
+    else{
+      hmap.at(currChar) = hmap.at(currChar + 1); 
+    }
+  }
+}
 
-std::string generateCode(Node* root, std::unordered_map<char, int>& tree, std::string target){}
+void generateHuffTree(Node* root, std::unordered_map<char, int>& charMap){}
+
+std::string generateCode(Node* root, std::unordered_map<char, int>& charMap, std::string target){
+
+}
 
 void compress(std::ifstream& infile, std::ofstream& outfile){
   Node* root = new Node();
@@ -52,6 +69,8 @@ void compress(std::ifstream& infile, std::ofstream& outfile){
   while(infile >> currLine){
     charCount(hmap, currLine);
   }
+
+  generateHuffTree(root, hmap);
   
   //Clear the input stream of any potential errors and set it back up to the beginning.
   infile.clear();
