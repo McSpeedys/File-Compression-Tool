@@ -16,25 +16,25 @@ class Node{
   
   public:
     //Custom constructor.
-    Node(int freq, char c): frequency(freq), currChar(c) left(NULL) right(NULL){}
+    Node(int freq, char c): frequency(freq), currChar(c), left(NULL), right(NULL){}
 
     //Default constructor.
-    Node(): frequency(0), currChar(''), left(NULL), right(NULL){}
+    Node(): frequency(0), currChar(' '), left(NULL), right(NULL){}
     
     //Public functions to be able to edit private values of nodes.
-    static Node* setFreq(int freq){
+    void Node* setFreq(int freq){
       this->frequency = freq;
     }
 
-    static Node* setChar(char c){
+    void Node* setChar(char c){
       this->currChar = c;
     }
 
-    static Node* setRNode(Node* n){
+    void Node* setRNode(Node* n){
       this->right = n;
     }
     
-    static Node* setLNode(Node* n){
+    void Node* setLNode(Node* n){
       this->left = n;
     }
 };
@@ -49,12 +49,25 @@ void charCount(std::unordered_map<char, int>& hmap, std::string target){
       hmap.insert({currChar, 1});
     }
     else{
-      hmap.at(currChar) = hmap.at(currChar + 1); 
+      hmap[currChar]++; 
     }
   }
 }
 
-void generateHuffTree(Node* root, std::unordered_map<char, int>& charMap){}
+void generateHuffTree(Node* root, std::unordered_map<char, int>& charMap){
+  int totalFreq;
+  for(const auto& pair: charMap){
+    totalFreq += pair.second;
+  }
+  //Set the inital frequency count for the root.
+  root.setFreq(totalFreq);
+
+  while(totalFreq != 0){
+    for(const auto& pair: charMap){
+      
+    }
+  }
+}
 
 std::string generateCode(Node* root, std::unordered_map<char, int>& charMap, std::string target){
 
@@ -66,7 +79,7 @@ void compress(std::ifstream& infile, std::ofstream& outfile){
   std::unordered_map<char, int> hmap;
 
   //Go through the file once to set up a hashmap with each character and their frequencies.
-  while(infile >> currLine){
+  while(std::getline(infile, currLine)){
     charCount(hmap, currLine);
   }
 
@@ -78,7 +91,7 @@ void compress(std::ifstream& infile, std::ofstream& outfile){
   
   //Go through the file a second time to generate Huffman codes for each line 
   //and output them into a new file.
-  while(infile >> currLine){
+  while(std::getline(infile, currLine)){
     std::string huffCode = generateCode(root, hmap, currLine);
     outfile << huffCode;
   } 
