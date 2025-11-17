@@ -22,20 +22,36 @@ class Node{
     Node(): frequency(0), currChar(' '), left(NULL), right(NULL){}
     
     //Public functions to be able to edit private values of nodes.
-    void Node* setFreq(int freq){
+    void setFreq(int freq){
       this->frequency = freq;
     }
 
-    void Node* setChar(char c){
+    void setChar(char c){
       this->currChar = c;
     }
 
-    void Node* setRNode(Node* n){
+    void setRNode(Node* n){
       this->right = n;
     }
     
-    void Node* setLNode(Node* n){
+    void setLNode(Node* n){
       this->left = n;
+    }
+
+    int getFreq(){
+      return frequency;
+    }
+
+    char getChar(){
+      return currChar;
+    }
+
+    Node* getLeft(){
+      return left;
+    }
+
+    Node* getRight{
+      return right;
     }
 };
 
@@ -55,12 +71,12 @@ void charCount(std::unordered_map<char, int>& hmap, std::string target){
 }
 
 void generateHuffTree(Node* root, std::unordered_map<char, int>& charMap){
-  int totalFreq;
+  int totalFreq = 0;
   for(const auto& pair: charMap){
     totalFreq += pair.second;
   }
   //Set the inital frequency count for the root.
-  root.setFreq(totalFreq);
+  root->setFreq(totalFreq);
 
   while(totalFreq != 0){
     for(const auto& pair: charMap){
