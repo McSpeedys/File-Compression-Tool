@@ -71,7 +71,7 @@ void charCount(std::unordered_map<char, int>& hmap, std::string target){
   }
 }
 
-void generateHuffTree(Node* root, std::unordered_map<char, int>& charMap){
+void generateHuffTree(Node*& root, std::unordered_map<char, int>& charMap){
   std::vector<Node*> nodes;
   
   //Pushing each member of the hashmap into the vector as nodes.
@@ -82,7 +82,7 @@ void generateHuffTree(Node* root, std::unordered_map<char, int>& charMap){
   //Handling edge case where only a single character was used in file.
   if(nodes.size() == 1){
     Node* single = nodes[0];
-    Node* parent = new Node(only->getFreq(), ' ');
+    Node* parent = new Node(single->getFreq(), ' ');
 
     parent->setLNode(single);
     root = parent;
@@ -126,6 +126,10 @@ void generateHuffTree(Node* root, std::unordered_map<char, int>& charMap){
     parent->setLNode(left);
     parent->setRNode(right);
     
+    //Removing the used up nodes out of rotation.
+    nodes.erase(nodes.begin() + min1);
+    nodes.erase(nodes.begin() + min2);
+    
     //Pushing the parent node back into the vector.
     nodes.push_back(parent);
   }
@@ -134,8 +138,37 @@ void generateHuffTree(Node* root, std::unordered_map<char, int>& charMap){
   root = nodes[0];
 }
 
-std::string generateCode(Node* root, std::unordered_map<char, int>& charMap, std::string target){
+void generateCodeTable(Node* currNode, std::string currCode, std::unordered_map<char, std::string>& table){
+  if(currNode!){
+    return;
+  }
+  
+  //Assigning the code if we are at a leaf node.
+  if(currNode->getLeft() == NULL && currNode->getRight() == NULL){
+    table[node->getChar()] = currCode;
+    return;
+  }
 
+  //If we are not in a leaf node traversing recursively
+  //and adding huffman code in 0 and 1s.
+  generateCodeTable(currNode->getLeft(), currCode + "0", table);
+  generateCodeTable(currNode->getRight(), currCode + "1", table);
+}
+
+std::string generateCode(Node* root, std::unordered_map<char, int>& charMap, std::string target){
+  std::unordered_map<char, std::string> table;
+  
+  //Build the table.
+  buildCodeTable(root, "", table);
+  
+  std::string code;
+
+  //Convert each char to huffman code.
+  for(char c: target){
+    code += table[c];
+  }
+
+  return code;
 }
 
 void compress(std::ifstream& infile, std::ofstream& outfile){
