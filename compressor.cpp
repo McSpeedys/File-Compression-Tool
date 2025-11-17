@@ -4,8 +4,9 @@
 #include <fstream>
 #include <unordered_map>
 #include <string>
+#include <vector>
 
-//The node structure needed to create the Huffman tree.
+//The node class needed to create the Huffman tree.
 class Node{
   private:
     int frequency;
@@ -50,7 +51,7 @@ class Node{
       return left;
     }
 
-    Node* getRight{
+    Node* getRight(){
       return right;
     }
 };
@@ -71,18 +72,66 @@ void charCount(std::unordered_map<char, int>& hmap, std::string target){
 }
 
 void generateHuffTree(Node* root, std::unordered_map<char, int>& charMap){
-  int totalFreq = 0;
-  for(const auto& pair: charMap){
-    totalFreq += pair.second;
+  std::vector<Node*> nodes;
+  
+  //Pushing each member of the hashmap into the vector as nodes.
+  for(const auto& p: charMap){
+    nodes.push_back(new Node(p.second, p.first));
   }
-  //Set the inital frequency count for the root.
-  root->setFreq(totalFreq);
 
-  while(totalFreq != 0){
-    for(const auto& pair: charMap){
-      
-    }
+  //Handling edge case where only a single character was used in file.
+  if(nodes.size() == 1){
+    Node* single = nodes[0];
+    Node* parent = new Node(only->getFreq(), ' ');
+
+    parent->setLNode(single);
+    root = parent;
+    return;
   }
+  
+  //Combining two minimum frequency nodes until we create a whole tree in
+  //one node.
+  while(nodes.size() > 1){
+    int min1 = -1;
+    int min2 = -1;
+
+    for(int i = 0; i < nodes.size(); i++){
+      if(min1 == -1 || nodes[i]->getFreq() < nodes[min1]->getFreq()){
+        min1 = i;
+      }
+    }
+
+    for(int i = 0; i < nodes.size(); i++){
+      //Ignore first minimum.
+      if(i == min1){
+        continue;
+      }
+
+      if(min2 == -1 || nodes[i]->getFreq() < nodes[min2]->getFreq()){
+        min2 = i;
+      }
+    }
+    
+    //Setting up left and right nodes,
+    //making sure min1 > min2 so deletion order does not
+    //break vector order.
+    Node* left = nodes[min1];
+    Node* right = nodes[min2];
+    if(min1 < min2){
+      std::swap(min1, min2);
+    }
+    
+    //Setting up parent node. 
+    Node* parent = new Node(left->getFreq() + right->getFreq(), ' ');
+    parent->setLNode(left);
+    parent->setRNode(right);
+    
+    //Pushing the parent node back into the vector.
+    nodes.push_back(parent);
+  }
+  
+  //Setting root as the last node left which is the tree.
+  root = nodes[0];
 }
 
 std::string generateCode(Node* root, std::unordered_map<char, int>& charMap, std::string target){
