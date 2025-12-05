@@ -11,7 +11,8 @@ int main(int argc, char** argv){
       std::ofstream outfile;
 
       infile.open(argv[2]);
-      outfile.open(argv[3]);
+      //Open as binary so we can write binary bits into it.
+      outfile.open(argv[3], std::ios::binary);
 
       //Checking if the files given exist.
       if(!(infile.is_open() && outfile.is_open())){
@@ -26,8 +27,9 @@ int main(int argc, char** argv){
     case "-d":{
       std::ifstream infile;
       std::ofstream outfile;
-
-      infile.open(argv[2]);
+      
+      //Open as binary so we can read off of it in bits.
+      infile.open(argv[2], std::ios::binary);
       outfile.open(argv[3]);
 
       if(!(infile.is_open() && outfile.is_open())){

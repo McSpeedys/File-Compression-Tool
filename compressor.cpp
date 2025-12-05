@@ -139,13 +139,18 @@ void generateHuffTree(Node*& root, std::unordered_map<char, int>& charMap){
 }
 
 void generateCodeTable(Node* currNode, std::string currCode, std::unordered_map<char, std::string>& table){
-  if(currNode!){
+  if(!currNode){
     return;
   }
   
   //Assigning the code if we are at a leaf node.
   if(currNode->getLeft() == NULL && currNode->getRight() == NULL){
-    table[node->getChar()] = currCode;
+    //Handling single char cases.
+    if(currCode.empty()){
+      currCode = "0";
+    }
+
+    table[currNode->getChar()] = currCode;
     return;
   }
 
@@ -159,7 +164,7 @@ std::string generateCode(Node* root, std::unordered_map<char, int>& charMap, std
   std::unordered_map<char, std::string> table;
   
   //Build the table.
-  buildCodeTable(root, "", table);
+  generateCodeTable(root, "", table);
   
   std::string code;
 
@@ -171,28 +176,75 @@ std::string generateCode(Node* root, std::unordered_map<char, int>& charMap, std
   return code;
 }
 
+void packBits(std::ofstream& outfile, std::string& code){
+  unsigned char byte = 0;
+  int bitCount = 0;
+
+  for(char bit: code){
+    //Shift left and add new bit.
+    byte = (byte << 1) | (bit - '0');
+    bitCount++
+
+    if(bitCount == 8){
+      outfile.write(reinterpret_cast<char*>(&byte), 1);
+
+      byte = 0;
+      bitCount = 0;
+    }
+  }
+
+  //Handling padding.
+  if(bitCount > 0){
+    //Padding with 0s.
+    byte = byte << (8 - bitCount);
+    outfile.write(reinterpret_cast<char*>(&byte), 1);
+  }
+}
+
+void writeHeader(std::ofstream& outfile, std::unordered_map<char, int>& charMap, int padding){
+  //Write the number of unique characters.
+  int uniqueChars = charMap.size();
+  outfile.write(reinterpret_cast<char*>(&uniqueChars), sizeof(int));
+
+  //Write each character and its frequency.
+  for(const auto& pair: charMap){
+    outfile.write(&pair.first, sizeof(char));
+    outfile.write(reinterpret_cast<char*>(&pair.second), sizeof(int));
+  }
+
+  //Write the padding bits.
+  outfile.write(reinterpret_cast<char*>(&padding), sizeof(int));
+}
+
 void compress(std::ifstream& infile, std::ofstream& outfile){
   Node* root = new Node();
   std::string currLine;
+  std::string entireText;
   std::unordered_map<char, int> hmap;
 
   //Go through the file once to set up a hashmap with each character and their frequencies.
   while(std::getline(infile, currLine)){
+    //Adding back the newline that we removed in getLine.
+    currLine += '\n';
     charCount(hmap, currLine);
+    entireText += currLine;
   }
-
+  
+  //Generate the tree.
   generateHuffTree(root, hmap);
   
-  //Clear the input stream of any potential errors and set it back up to the beginning.
-  infile.clear();
-  infile.seekg(0, std::ios::beg);
+  //Generate the Huffman code.
+  std::string huffcode = generateCode(root, hmap, entireText);
   
-  //Go through the file a second time to generate Huffman codes for each line 
-  //and output them into a new file.
-  while(std::getline(infile, currLine)){
-    std::string huffCode = generateCode(root, hmap, currLine);
-    outfile << huffCode;
-  } 
+  //Calculate the padding amount.
+  int padding = (8 - (huffcode.length() % 8)) % 8;
+
+  //Write header.
+  writeHeader(outfile, hmap, paddingBits);
+
+  //Write the packed bits,
+  packBits(outfile, huffcode);
+
   
   //Close the files.
   infile.close();

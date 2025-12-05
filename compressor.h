@@ -14,6 +14,8 @@ void decompress(std::ifstream&, std::ofstream&);
 void charCount(std::unordered_map<char, int>&, std::string);
 void generateHuffTree(Node*&, std::unordered_map<char, int>&);
 void generateCodeTable(Node*, std::string, std::unordered_map<char, std::string>&);
+void packBits(std::ofstream&, std::string&);
+void writeHeader(std::ofstream&, std::unordered_map<char, int>&, int);
 std::string generateCode(Node&, std::unordered_map<char, int>&, std::string);
 class Node;
 
