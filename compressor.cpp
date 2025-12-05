@@ -21,7 +21,12 @@ class Node{
 
     //Default constructor.
     Node(): frequency(0), currChar(' '), left(NULL), right(NULL){}
-    
+
+    ~Node(){
+      delete left;
+      delete right;
+    }
+  
     //Public functions to be able to edit private values of nodes.
     void setFreq(int freq){
       this->frequency = freq;
