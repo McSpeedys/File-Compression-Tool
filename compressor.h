@@ -17,6 +17,25 @@ void generateCodeTable(Node*, std::string, std::unordered_map<char, std::string>
 void packBits(std::ofstream&, std::string&);
 void writeHeader(std::ofstream&, std::unordered_map<char, int>&, int);
 std::string generateCode(Node&, std::unordered_map<char, int>&, std::string);
-class Node;
+//Class definition for the nodes of the Huffman tree.
+class Node{
+    private:
+        char character;
+        int frequency;
+        Node* left;
+        Node* right;
+    public:
+        Node(int, char);
+        Node();
+        ~Node();
+        void setFreq(int);
+        void setChar(char);
+        void setRNode(Node*);
+        void setLNode(Node*);
+        int getFreq();
+        char getChar();
+        Node* getLeft();
+        Node* getRight();
+};
 
 #endif
