@@ -4,50 +4,55 @@
 #include <cstdlib>
 
 int main(int argc, char** argv){
-  //Using a switch to handle user input.
-  switch (argv[1]){
-    case "-c":{
-      std::ifstream infile;
-      std::ofstream outfile;
+  //Checking if initial command input is valid.
+  if(argc < 4){
+    std::cout << "Valid Usage:\n";
+    std::cout << "To Compress: ./compress.exe -c <Your_input_file> <Your_output_file>\n";
+    std::cout << "To Decompress: ./compress.exe -d <Your_input_file> <Your_output_file>" << std::endl;
+    return 1;
+  }
+  //Getting what operation is going to be done.
+  std::string operation = argv[1];
 
-      infile.open(argv[2]);
-      //Open as binary so we can write binary bits into it.
-      outfile.open(argv[3], std::ios::binary);
+  if(operation == "-c"){
+    std::ifstream infile;
+    std::ofstream outfile;
 
-      //Checking if the files given exist.
-      if(!(infile.is_open() && outfile.is_open())){
-        std::cout << "Please input valid and existing files." << std::endl;
-        return 1;
-      }
+    infile.open(argv[2]);
+    //Open as binary so we can write binary bits into it.
+    outfile.open(argv[3], std::ios::binary);
 
-      compress(infile, outfile);
-
-      break;
+    //Checking if the files given exist.
+    if(!(infile.is_open() && outfile.is_open())){
+      std::cout << "Please input valid and existing files." << std::endl;        return 1;
     }
-    case "-d":{
-      std::ifstream infile;
-      std::ofstream outfile;
+
+    compress(infile, outfile);
+  }
+  else if(operation == "-d"){
+    std::ifstream infile;
+    std::ofstream outfile;
       
-      //Open as binary so we can read off of it in bits.
-      infile.open(argv[2], std::ios::binary);
-      outfile.open(argv[3]);
+    //Open as binary so we can read off of it in bits.
+    infile.open(argv[2], std::ios::binary);
+    outfile.open(argv[3]);
 
-      if(!(infile.is_open() && outfile.is_open())){
-        std::cout << "Please input valid and existing files." << std::endl;
-      }
-
-      decompress(infile, outfile);
-
-      break;
-    }
-    default:{
-      //Outputting correct usage if the user gets it wrong.        
-      std::cout << "Valid Usage:\n";
-      std::cout << "To Compress: ./compress.exe -c <Your_input_file> <Your_output_file>\n";
-      std::cout << "To Decompress: ./compress.exe -d <Your_input_file> <Your_output_file>" << std::endl;
+    if(!(infile.is_open() && outfile.is_open())){
+      std::cout << "Please input valid and existing files." << std::endl;
       return 1;
     }
 
+    decompress(infile, outfile);
+
+
   }
+  else{
+    //Outputting correct usage if the user gets it wrong.        
+    std::cout << "Valid Usage:\n";
+    std::cout << "To Compress: ./compress.exe -c <Your_input_file> <Your_output_file>\n";
+    std::cout << "To Decompress: ./compress.exe -d <Your_input_file> <Your_output_file>" << std::endl;
+    return 1;
+  }
+
   return 0;
 }
