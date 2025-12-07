@@ -20,11 +20,11 @@ The executable in the repo was built on Arch linux, build on your own to make su
 -Git (Optiona)
 
 ### Compilation:
-1. Clone the repo.
+1. Clone the repo:
 `git clone https://github.com/McSpeedys/File-Compression-Tool.git`
-2. Access the directory.
+2. Access the directory:
 `cd File-Compression-Tool`
-3. "Make" the program.
+3. "Make" the program:
 `make`
 4. If you want to delete the program:
 `make clean`
