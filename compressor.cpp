@@ -6,60 +6,51 @@
 #include <string>
 #include <vector>
 
-//The node class needed to create the Huffman tree.
-class Node{
-  private:
-    int frequency;
-    char currChar;
+//The node class implementation needed to create the Huffman tree.
 
-    Node* left;
-    Node* right;
+//Custom constructor.
+Node::Node(int freq, char c): frequency(freq), currChar(c), left(NULL), right(NULL){}
+
+//Default constructor.
+Node::Node(): frequency(0), currChar(' '), left(NULL), right(NULL){}
+
+Node::~Node(){
+  delete left;
+  delete right;
+}
   
-  public:
-    //Custom constructor.
-    Node(int freq, char c): frequency(freq), currChar(c), left(NULL), right(NULL){}
+//Public functions to be able to edit private values of nodes.
+void Node::setFreq(int freq){
+  this->frequency = freq;
+}
 
-    //Default constructor.
-    Node(): frequency(0), currChar(' '), left(NULL), right(NULL){}
+void Node::setChar(char c){
+  this->currChar = c;
+}
 
-    ~Node(){
-      delete left;
-      delete right;
-    }
-  
-    //Public functions to be able to edit private values of nodes.
-    void setFreq(int freq){
-      this->frequency = freq;
-    }
-
-    void setChar(char c){
-      this->currChar = c;
-    }
-
-    void setRNode(Node* n){
-      this->right = n;
-    }
+void Node::setRNode(Node* n){
+  this->right = n;
+}
     
-    void setLNode(Node* n){
-      this->left = n;
-    }
+void Node::setLNode(Node* n){
+  this->left = n;
+}
 
-    int getFreq(){
-      return frequency;
-    }
+int Node::getFreq(){
+  return frequency;
+}
 
-    char getChar(){
-      return currChar;
-    }
+char Node::getChar(){
+  return currChar;
+}
 
-    Node* getLeft(){
-      return left;
-    }
+Node* Node::getLeft(){
+  return left;
+}
 
-    Node* getRight(){
-      return right;
-    }
-};
+Node* Node::getRight(){
+  return right;
+}
 
 void charCount(std::unordered_map<char, int>& hmap, std::string target){
   //Navigate through the line one by one and register them to the map.
@@ -188,7 +179,7 @@ void packBits(std::ofstream& outfile, std::string& code){
   for(char bit: code){
     //Shift left and add new bit.
     byte = (byte << 1) | (bit - '0');
-    bitCount++
+    bitCount++;
 
     if(bitCount == 8){
       outfile.write(reinterpret_cast<char*>(&byte), 1);
@@ -214,7 +205,7 @@ void writeHeader(std::ofstream& outfile, std::unordered_map<char, int>& charMap,
   //Write each character and its frequency.
   for(const auto& pair: charMap){
     outfile.write(&pair.first, sizeof(char));
-    outfile.write(reinterpret_cast<char*>(&pair.second), sizeof(int));
+    outfile.write(reinterpret_cast<const char*>(&pair.second), sizeof(int));
   }
 
   //Write the padding bits.
@@ -245,7 +236,7 @@ void compress(std::ifstream& infile, std::ofstream& outfile){
   int padding = (8 - (huffcode.length() % 8)) % 8;
 
   //Write header.
-  writeHeader(outfile, hmap, paddingBits);
+  writeHeader(outfile, hmap, padding);
 
   //Write the packed bits,
   packBits(outfile, huffcode);
@@ -264,12 +255,12 @@ void decompress(std::ifstream& infile, std::ofstream& outfile){
   //Load the characters and their frequency
   //into a hashmap.
   std::unordered_map<char, int> charMap;
-  for(int i = 0; i < uniqueChars: i++){
+  for(int i = 0; i < uniqueChars; i++){
     char currChar;
     int freq;
     infile.read(&currChar, sizeof(char));
     infile.read(reinterpret_cast<char*>(&freq), sizeof(int));
-    charMap[currChar] = freq
+    charMap[currChar] = freq;
   }
   
   //Calculate the padding.
@@ -283,17 +274,17 @@ void decompress(std::ifstream& infile, std::ofstream& outfile){
   //Read and unpack bits one by one.
   Node* currNode = root;
   unsigned char byte;
-  while(infile.read(reinterpret_cast<char*>(%byte), 1)){
+  while(infile.read(reinterpret_cast<char*>(&byte), 1)){
     for(int i = 7; i >= 0; i--){
       //Check if current bit is 0 or 1.
       bool bit = (byte >> i) & 1;
       //If bit is 1 check right branch, if bit is 0 
       //check left branch.
-      currNode = bit ? current->getRight(): currNode->getLeft();
+      currNode = bit ? currNode->getRight(): currNode->getLeft();
       //Once we hit a leaf node write it into the file and 
       //go back to the root of the tree.
       if(currNode->getLeft() == NULL && currNode->getRight() == NULL){
-        outfile << currNode->getCar();
+        outfile << currNode->getChar();
         currNode = root;
       }
     }
