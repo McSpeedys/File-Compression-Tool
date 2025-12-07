@@ -15,9 +15,9 @@ It analyzes character frequencies in a file, builds an optimal binary tree, and 
 The executable in the repo was built on Arch linux, build on your own to make sure it works on your machine.
 
 ## Prerequisites:
-# -C++ compiler with C++11 support or later
-# -Make
-# -Git (Optional)
+### -C++ compiler with C++11 support or later
+### -Make
+### -Git (Optional)
 
 ### Compilation:
 1. Clone the repo:
