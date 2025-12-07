@@ -245,6 +245,8 @@ void compress(std::ifstream& infile, std::ofstream& outfile){
   //Close the files.
   infile.close();
   outfile.close();
+  //Free memory.
+  delete root;
 }
 
 void decompress(std::ifstream& infile, std::ofstream& outfile){
@@ -289,4 +291,10 @@ void decompress(std::ifstream& infile, std::ofstream& outfile){
       }
     }
   }
+
+  //Close the files.
+  infile.close();
+  outfile.close();
+  //Free memory.
+  delete root;
 }
