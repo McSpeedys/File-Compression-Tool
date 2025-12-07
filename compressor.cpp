@@ -256,4 +256,46 @@ void compress(std::ifstream& infile, std::ofstream& outfile){
   outfile.close();
 }
 
-void decompress(std::ifstream& infile, std::ofstream& outfile){}
+void decompress(std::ifstream& infile, std::ofstream& outfile){
+  //Read the header off the file.
+  int uniqueChars;
+  infile.read(reinterpret_cast<char*>(&uniqueChars), sizeof(int));
+  
+  //Load the characters and their frequency
+  //into a hashmap.
+  std::unordered_map<char, int> charMap;
+  for(int i = 0; i < uniqueChars: i++){
+    char currChar;
+    int freq;
+    infile.read(&currChar, sizeof(char));
+    infile.read(reinterpret_cast<char*>(&freq), sizeof(int));
+    charMap[currChar] = freq
+  }
+  
+  //Calculate the padding.
+  int padding;
+  infile.read(reinterpret_cast<char*>(&padding), sizeof(int));
+
+  //Rebuild the huffman tree.
+  Node* root = new Node();
+  generateHuffTree(root, charMap);
+
+  //Read and unpack bits one by one.
+  Node* currNode = root;
+  unsigned char byte;
+  while(infile.read(reinterpret_cast<char*>(%byte), 1)){
+    for(int i = 7; i >= 0; i--){
+      //Check if current bit is 0 or 1.
+      bool bit = (byte >> i) & 1;
+      //If bit is 1 check right branch, if bit is 0 
+      //check left branch.
+      currNode = bit ? current->getRight(): currNode->getLeft();
+      //Once we hit a leaf node write it into the file and 
+      //go back to the root of the tree.
+      if(currNode->getLeft() == NULL && currNode->getRight() == NULL){
+        outfile << currNode->getCar();
+        currNode = root;
+      }
+    }
+  }
+}

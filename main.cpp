@@ -5,7 +5,7 @@
 
 int main(int argc, char** argv){
   //Using a switch to handle user input.
-  switch argv[1]{
+  switch (argv[1]){
     case "-c":{
       std::ifstream infile;
       std::ofstream outfile;
