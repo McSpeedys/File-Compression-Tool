@@ -1,9 +1,15 @@
 #include "compressor.h"
+#include "gui.h"
 #include <iostream>
 #include <fstream>
 #include <cstdlib>
 
 int main(int argc, char** argv){
+  //No arguments given: open the graphical interface.
+  if(argc == 1){
+    return runGui();
+  }
+
   //Checking if initial command input is valid.
   if(argc < 4){
     std::cout << "Valid Usage:\n";

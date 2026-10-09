@@ -17,6 +17,8 @@ The executable in the repo was built on Arch linux, build on your own to make su
 ## Prerequisites:
 ### -C++ compiler with C++11 support or later
 ### -Make
+### -FLTK development files on Linux (e.g. `sudo apt install libfltk1.3-dev` or `sudo pacman -S fltk`)
+### -Nothing extra on Windows (the GUI uses the Win32 API); build with MSYS2/MinGW `make`, or cross compile from Linux with `make windows` (needs mingw-w64)
 ### -Git (Optional)
 
 ### Compilation:
@@ -30,6 +32,11 @@ The executable in the repo was built on Arch linux, build on your own to make su
 `make clean`
 
 # Usage 
+# Graphical interface.
+Run the program with no arguments (or double click it) to open the GUI: pick an input file, an output file and press Compress or Decompress.
+`./compress.exe`
+
+# Command line.
 # Compress a file.
 `./compressor input-file.txt output-file.txt`
 
