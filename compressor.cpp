@@ -5,6 +5,7 @@
 #include <unordered_map>
 #include <string>
 #include <vector>
+#include <algorithm>
 
 //The node class implementation needed to create the Huffman tree.
 
@@ -74,6 +75,12 @@ void generateHuffTree(Node*& root, std::unordered_map<char, int>& charMap){
   for(const auto& p: charMap){
     nodes.push_back(new Node(p.second, p.first));
   }
+
+  //Sorting by character so the tree is built the same way every time,
+  //hashmap order is not guaranteed to match between compress and decompress.
+  std::sort(nodes.begin(), nodes.end(), [](Node* a, Node* b){
+    return a->getChar() < b->getChar();
+  });
 
   //Handling edge case where only a single character was used in file.
   if(nodes.size() == 1){
@@ -273,11 +280,18 @@ void decompress(std::ifstream& infile, std::ofstream& outfile){
   Node* root = new Node();
   generateHuffTree(root, charMap);
 
+  //Total number of characters the original file had, used to ignore the
+  //padding bits at the end of the last byte.
+  long long remaining = 0;
+  for(const auto& p: charMap){
+    remaining += p.second;
+  }
+
   //Read and unpack bits one by one.
   Node* currNode = root;
   unsigned char byte;
-  while(infile.read(reinterpret_cast<char*>(&byte), 1)){
-    for(int i = 7; i >= 0; i--){
+  while(remaining > 0 && infile.read(reinterpret_cast<char*>(&byte), 1)){
+    for(int i = 7; i >= 0 && remaining > 0; i--){
       //Check if current bit is 0 or 1.
       bool bit = (byte >> i) & 1;
       //If bit is 1 check right branch, if bit is 0 
@@ -288,6 +302,7 @@ void decompress(std::ifstream& infile, std::ofstream& outfile){
       if(currNode->getLeft() == NULL && currNode->getRight() == NULL){
         outfile << currNode->getChar();
         currNode = root;
+        remaining--;
       }
     }
   }
